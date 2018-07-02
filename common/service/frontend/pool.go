@@ -122,8 +122,10 @@ func (p *PluginsPool) RegistryForStatus(ctx context.Context, status RequestStatu
 			registry.Cplugins.Cplugin = append(registry.Cplugins.Cplugin, clone)
 		}
 		contribs := plugin.GetRegistryContributions()
+		fmt.Println(plugin.GetId(), contribs)
 		if contribs != nil && contribs.Cactions != nil {
-			actions := plugin.FilterActions(status, p, plugin.GetRegistryContributions().Cactions.Caction)
+			fmt.Println(plugin.GetId(), contribs.Cactions.Caction)
+			actions := plugin.FilterActions(status, p, contribs.Cactions.Caction)
 			registry.Cactions.MergeActions(actions)
 		}
 		if contribs != nil && contribs.Cclient_configs != nil {

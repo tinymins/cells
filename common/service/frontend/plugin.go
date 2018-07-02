@@ -116,6 +116,7 @@ func LoadPluginFromXML(id string, data []byte) (output Plugin, err error) {
 		}
 	default:
 		var target Cplugin
+
 		if e1 := xml.Unmarshal(data, &target); e1 == nil {
 			if target.Attrid == "" {
 				target.Attrid = id
@@ -124,7 +125,11 @@ func LoadPluginFromXML(id string, data []byte) (output Plugin, err error) {
 		} else {
 			err = fmt.Errorf("Could not load "+id, e1)
 		}
+		if id == "authfront.oauth" {
+			fmt.Printf("%s %v", data, target.GetRegistryContributions())
+		}
 	}
+	fmt.Println("Loaded ", id)
 	return
 
 }

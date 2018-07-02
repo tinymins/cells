@@ -161,7 +161,7 @@ func (a *FrontendHandler) FrontSession(req *restful.Request, rsp *restful.Respon
 		return
 	}
 
-	auth := "cells-front" + ":" + "2va32eFc43l8Sy91JscvL5cN"
+	auth := "cells-front" + ":" + "4zINIVHwQhG1aNqATGKT6jQ2"
 	basic := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 
 	httpReq.Header.Add("Content-Type", "application/x-www-form-urlencoded") // Important our dex API does not yet support json payload.

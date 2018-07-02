@@ -6,6 +6,7 @@
     <client_settings>
         <resources>
             <js className="AuthfrontCoreActions" file="plug/core.authfront/res/build/AuthfrontCoreActions.js"/>
+
         </resources>
     </client_settings>
 </plugin>

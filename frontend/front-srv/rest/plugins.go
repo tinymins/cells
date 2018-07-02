@@ -41,6 +41,7 @@ var BasePluginsBox = frontend.PluginBox{
 		"authfront.http_server",
 		"authfront.keystore",
 		"authfront.session_login",
+		"authfront.oauth",
 		"boot.conf",
 		"conf.pydio",
 		"core.access",

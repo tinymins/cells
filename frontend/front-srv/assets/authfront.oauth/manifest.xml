@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="authfront.oauth" enabled="always" label="CONF_MESSAGE[OAuth Authentication]"
+          description="CONF_MESSAGE[Oauth authentication with Dex]"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.pydio/pydio_registry.xsd">
+    <client_settings>
+        <resources>
+            <js className="OAuth" file="plug/authfront.oauth/res/build/OAuth.js" />
+        </resources>
+    </client_settings>
+    <registry_contributions>
+        <actions>
+            <action name="login">
+                <gui text="163" title="168" iconClass="icon-signin"
+                     accessKey="" hasAccessKey="false">
+                    <context selection="false" dir="" recycle="false"
+                             actionBar="true" contextMenu="false" infoPanel="false"
+                             actionBarGroup="user,admin">
+                    </context>
+                </gui>
+                <rightsContext noUser="false" userLogged="hidden" guestLogged="show" read="false" write="false" adminOnly=""/>
+                <processing>
+                    <clientCallback module="OAuth.login"/>
+                    <serverCallback module="OAuth.login"/>
+                </processing>
+            </action>
+        </actions>
+    </registry_contributions>
+</plugin>

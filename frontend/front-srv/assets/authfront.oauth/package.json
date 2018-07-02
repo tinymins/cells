@@ -1,0 +1,21 @@
+{
+  "name": "authfront.oauth",
+  "description": "OAuth authentication",
+  "source_path": "res/js",
+  "main": "index.js",
+  "author": "Abstrium SAS",
+  "license": "agpl",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-class": "^0.3.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "grunt": "*",
+    "grunt-babel": "^7.0.0",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*"
+  },
+  "dependencies": {}
+}

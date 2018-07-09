@@ -1,14 +1,14 @@
 "use strict";
 
-var _Auth = require("containers/Auth");
+var _Auth = require("./containers/Auth");
 
 var _Auth2 = _interopRequireDefault(_Auth);
 
-var _OIDCProvider = require("containers/OIDCProvider");
+var _OIDCProvider = require("./containers/OIDCProvider");
 
 var _OIDCProvider2 = _interopRequireDefault(_OIDCProvider);
 
-var _oidc = require("services/oidc");
+var _oidc = require("./services/oidc");
 
 var _oidc2 = _interopRequireDefault(_oidc);
 

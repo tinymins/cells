@@ -4,7 +4,7 @@ module.exports = function(grunt) {
             options: {
                 "sourceMap": true,
                 "presets": ["env"],
-                "plugins": ["transform-class", "transform-class-properties", "transform-object-rest-spread"]
+                "plugins": ["transform-react-jsx", "transform-class", "transform-class-properties", "transform-object-rest-spread"]
             },
             dist: {
                 files: [{
@@ -12,17 +12,23 @@ module.exports = function(grunt) {
                     "cwd": "res/js",
                     "src": ["**/*.js"],
                     "dest": "res/js-compiled/",
-                    "ext": "-compiled.js"
+                    "ext": ".js"
                 }]
+            }
+        },
+        browserify: {
+            all_src: {
+                src: ['res/js-compiled/**/*.js'],
+                dest: 'res/js-browserified/OAuth.browserified.js'
             }
         },
         uglify: {
             all_src : {
                 options : {
                   sourceMap : true,
-                  sourceMapName : 'src/build/sourceMap.map'
+                  sourceMapName : 'res/build/sourceMap.map'
                 },
-                src : 'res/js-compiled/**/*-compiled.js',
+                src : 'res/js-browserified/OAuth.browserified.js',
                 dest : 'res/build/OAuth.js'
             }
         },
@@ -31,7 +37,7 @@ module.exports = function(grunt) {
                 files: [
                     "res/**/*"
                 ],
-                tasks: ['babel'],
+                tasks: ['babel', "browserify", "uglify"],
                 options: {
                     spawn: false
                 }
@@ -39,8 +45,9 @@ module.exports = function(grunt) {
         }
     });
     grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.registerTask("default", ["babel", "uglify"]);
+    grunt.registerTask("default", ["babel", "browserify", "uglify"]);
 
 };

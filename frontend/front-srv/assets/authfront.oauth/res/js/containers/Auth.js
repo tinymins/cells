@@ -24,6 +24,8 @@ class Auth extends React.Component {
   componentDidMount() {
     const { userManager } = this.context.oidc;
 
+    console.log(userManager)
+    
     //
     // // onAuthStateChanged returns an unsubscribe method
     // this.stopAuthListener = auth().onAuthStateChanged(user => {
@@ -38,15 +40,17 @@ class Auth extends React.Component {
   }
 
   componentWillUnmount() {
-    this.stopAuthListener();
+     // this.stopAuthListener();
   }
 
   handleSignIn = provider => {
 
       const { userManager } = this.context.oidc;
 
+
+
       userManager.signinPopup();
-      
+
     // const { auth } = this.context.firebase;
     //
     // switch (provider) {

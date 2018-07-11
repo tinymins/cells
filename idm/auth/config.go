@@ -120,6 +120,7 @@ type Web struct {
 	HTTPS          string   `json:"https"`
 	TLSCert        string   `json:"tlsCert"`
 	TLSKey         string   `json:"tlsKey"`
+	AllowedMethods []string `json:"allowedMethods"`
 	AllowedOrigins []string `json:"allowedOrigins"`
 }
 

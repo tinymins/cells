@@ -125,6 +125,7 @@ import ResourcePolicyQueryQueryType from './model/ResourcePolicyQueryQueryType';
 import RestACLCollection from './model/RestACLCollection';
 import RestBindResponse from './model/RestBindResponse';
 import RestBulkMetaResponse from './model/RestBulkMetaResponse';
+import RestCallbackResponse from './model/RestCallbackResponse';
 import RestCell from './model/RestCell';
 import RestCellAcl from './model/RestCellAcl';
 import RestChangeCollection from './model/RestChangeCollection';
@@ -970,6 +971,12 @@ export {
      * @property {module:model/RestBulkMetaResponse}
      */
     RestBulkMetaResponse,
+
+    /**
+     * The RestCallbackResponse model constructor.
+     * @property {module:model/RestCallbackResponse}
+     */
+    RestCallbackResponse,
 
     /**
      * The RestCell model constructor.

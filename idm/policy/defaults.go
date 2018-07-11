@@ -46,6 +46,7 @@ var (
 					Actions:     []string{"GET"},
 					Effect:      ladon.AllowAccess,
 				}),
+
 				LadonToProtoPolicy(&ladon.DefaultPolicy{
 					ID:          "reset-password-policy",
 					Description: "PolicyGroup.PublicAccess.Rule2",
@@ -68,6 +69,14 @@ var (
 					Subjects:    []string{"profile:anon"},
 					Resources:   []string{"rest:/frontend/session"},
 					Actions:     []string{"POST"},
+					Effect:      ladon.AllowAccess,
+				}),
+				LadonToProtoPolicy(&ladon.DefaultPolicy{
+					ID:          "auth-callback-policy",
+					Description: "PolicyGroup.PublicAccess.Rule4",
+					Subjects:    []string{"profile:anon"},
+					Resources:   []string{"rest:/auth/callback<.*>"},
+					Actions:     []string{"GET"},
 					Effect:      ladon.AllowAccess,
 				}),
 			},

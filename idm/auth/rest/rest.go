@@ -25,9 +25,11 @@ import (
 	"fmt"
 	"time"
 
+	oidc "github.com/coreos/go-oidc"
 	"github.com/emicklei/go-restful"
 	"github.com/micro/go-micro/errors"
 	"github.com/pborman/uuid"
+	"golang.org/x/oauth2"
 
 	"github.com/pydio/cells/common"
 	"github.com/pydio/cells/common/auth/claim"
@@ -242,4 +244,82 @@ func (a *TokenHandler) ResetPassword(req *restful.Request, resp *restful.Respons
 
 	resp.WriteEntity(response)
 
+}
+
+func (a *TokenHandler) Callback(req *restful.Request, resp *restful.Response) {
+
+	query := req.Request.URL.Query()
+	code := query.Get("code")
+	state := query.Get("state")
+	fmt.Println(state)
+
+	ctx := req.Request.Context()
+
+	// Initialize a provider by specifying dex's issuer URL.
+	provider, err := oidc.NewProvider(ctx, "http://127.0.0.1:53205/dex")
+	if err != nil {
+		service.RestError500(req, resp, err)
+		return
+	}
+
+	// Configure the OAuth2 config with the client values.
+	oauth2Config := oauth2.Config{
+		ClientID:     "cells-front",
+		ClientSecret: "9W53uH9imRBEZ6Xp9viiQxx6",
+		RedirectURL:  "http://172.17.2.104:8080/a/auth/callback",
+		Endpoint:     provider.Endpoint(),
+		Scopes:       []string{oidc.ScopeOpenID, "profile", "email", "groups"},
+	}
+
+	// Create an ID token parser.
+	idTokenVerifier := provider.Verifier(&oidc.Config{ClientID: "cells-front"})
+
+	// state := input.State
+
+	// Verify state.
+	oauth2Token, err := oauth2Config.Exchange(ctx, code)
+	if err != nil {
+		service.RestError500(req, resp, err)
+		return
+	}
+
+	// Extract the ID Token from OAuth2 token.
+	rawIDToken, ok := oauth2Token.Extra("id_token").(string)
+	if !ok {
+		// handle missing token
+		service.RestError500(req, resp, fmt.Errorf("Missing token"))
+		return
+	}
+
+	// Parse and verify ID Token payload.
+	verifiedIDToken, err := idTokenVerifier.Verify(ctx, rawIDToken)
+	if err != nil {
+		service.RestError500(req, resp, err)
+		return
+	}
+
+	// Extract custom claims.
+	// var claims struct {
+	// 	Email    string   `json:"email"`
+	// 	Verified bool     `json:"email_verified"`
+	// 	Groups   []string `json:"groups"`
+	// }
+
+	var claims map[string]interface{}
+
+	if err := verifiedIDToken.Claims(&claims); err != nil {
+		// handle error
+	}
+
+	fmt.Println(claims)
+
+	w := new(rest.CallbackResponse)
+
+	w.AccessToken = oauth2Token.AccessToken
+	w.TokenType = "bearer"
+	w.ExpiresIn = int64(oauth2Token.Expiry.Sub(time.Now()).Seconds())
+	w.RefreshToken = oauth2Token.RefreshToken
+	w.IDToken = rawIDToken
+
+	resp.WriteEntity(w)
 }

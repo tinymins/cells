@@ -171,6 +171,9 @@ func serve(c auth.Config, pydioSrvContext context.Context, pydioLogger *zap.Logg
 	if c.OAuth2.SkipApprovalScreen {
 		logger.Infof("config skipping approval screen")
 	}
+	if len(c.Web.AllowedMethods) > 0 {
+		logger.Infof("config allowed methods: %s", c.Web.AllowedMethods)
+	}
 	if len(c.Web.AllowedOrigins) > 0 {
 		logger.Infof("config allowed origins: %s", c.Web.AllowedOrigins)
 	}
@@ -181,6 +184,7 @@ func serve(c auth.Config, pydioSrvContext context.Context, pydioLogger *zap.Logg
 	serverConfig := server.Config{
 		SupportedResponseTypes: c.OAuth2.ResponseTypes,
 		SkipApprovalScreen:     c.OAuth2.SkipApprovalScreen,
+		AllowedMethods:         c.Web.AllowedMethods,
 		AllowedOrigins:         c.Web.AllowedOrigins,
 		Issuer:                 c.Issuer,
 		Storage:                s,

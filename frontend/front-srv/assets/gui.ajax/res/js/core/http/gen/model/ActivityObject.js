@@ -13,6 +13,7 @@
 
 
 import ApiClient from '../ApiClient';
+import ActivityObject from './ActivityObject';
 import ActivityObjectType from './ActivityObjectType';
 
 

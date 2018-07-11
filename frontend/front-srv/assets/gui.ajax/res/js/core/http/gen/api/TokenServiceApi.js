@@ -13,6 +13,7 @@
 
 
 import ApiClient from "../ApiClient";
+import RestCallbackResponse from '../model/RestCallbackResponse';
 import RestResetPasswordRequest from '../model/RestResetPasswordRequest';
 import RestResetPasswordResponse from '../model/RestResetPasswordResponse';
 import RestResetPasswordTokenResponse from '../model/RestResetPasswordTokenResponse';
@@ -37,6 +38,59 @@ export default class TokenServiceApi {
         this.apiClient = apiClient || ApiClient.instance;
     }
 
+
+
+    /**
+     * Callback for an oauth process
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.state 
+     * @param {String} opts.code 
+     * @param {String} opts.idToken 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with an object containing data of type {@link module:model/RestCallbackResponse} and HTTP response
+     */
+    callbackWithHttpInfo(opts) {
+      opts = opts || {};
+      let postBody = null;
+
+
+      let pathParams = {
+      };
+      let queryParams = {
+        'state': opts['state'],
+        'code': opts['code'],
+        'id_token': opts['idToken']
+      };
+      let headerParams = {
+      };
+      let formParams = {
+      };
+
+      let authNames = [];
+      let contentTypes = ['application/json'];
+      let accepts = ['application/json'];
+      let returnType = RestCallbackResponse;
+
+      return this.apiClient.callApi(
+        '/auth/callback', 'GET',
+        pathParams, queryParams, headerParams, formParams, postBody,
+        authNames, contentTypes, accepts, returnType
+      );
+    }
+
+    /**
+     * Callback for an oauth process
+     * @param {Object} opts Optional parameters
+     * @param {String} opts.state 
+     * @param {String} opts.code 
+     * @param {String} opts.idToken 
+     * @return {Promise} a {@link https://www.promisejs.org/|Promise}, with data of type {@link module:model/RestCallbackResponse}
+     */
+    callback(opts) {
+      return this.callbackWithHttpInfo(opts)
+        .then(function(response_and_data) {
+          return response_and_data.data;
+        });
+    }
 
 
     /**

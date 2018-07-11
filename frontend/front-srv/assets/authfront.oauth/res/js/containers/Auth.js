@@ -24,8 +24,10 @@ class Auth extends React.Component {
   componentDidMount() {
     const { userManager } = this.context.oidc;
 
-    console.log(userManager)
-    
+    userManager.events.addUserLoaded(function (loadedUser) {
+        console.log("HERE WE GO", loadedUser);
+    });
+
     //
     // // onAuthStateChanged returns an unsubscribe method
     // this.stopAuthListener = auth().onAuthStateChanged(user => {

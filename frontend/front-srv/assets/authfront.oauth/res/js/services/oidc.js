@@ -1,16 +1,18 @@
-import {UserManager} from "oidc-client"
+import {Log, UserManager} from "oidc-client"
 
 var config = {
-    authority: 'http://127.0.0.1:62134/dex',
+    authority: 'http://127.0.0.1:53205/dex',
     client_id: "cells-front",
-    redirect_uri: "http://127.0.0.1:5555/callback",
-    response_type: "code",
-    scope: "openid"
+    popup_redirect_uri: "http://172.17.2.104:8080/plug/authfront.oauth/res/popup.html",
+    response_type: "id_token token",
+    scope: "openid profile"
 };
 
 class OpenIDConnect {
   constructor() {
       this.userManager = new UserManager(config);
+      Log.logger = console
+      Log.level = Log.INFO;
   }
 }
 

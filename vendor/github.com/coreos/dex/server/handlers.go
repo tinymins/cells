@@ -95,6 +95,7 @@ type discovery struct {
 	Auth          string   `json:"authorization_endpoint"`
 	Token         string   `json:"token_endpoint"`
 	Keys          string   `json:"jwks_uri"`
+	UserInfo      string   `json:"userinfo_endpoint"`
 	ResponseTypes []string `json:"response_types_supported"`
 	Subjects      []string `json:"subject_types_supported"`
 	IDTokenAlgs   []string `json:"id_token_signing_alg_values_supported"`
@@ -109,6 +110,7 @@ func (s *Server) discoveryHandler() (http.HandlerFunc, error) {
 		Auth:        s.absURL("/auth"),
 		Token:       s.absURL("/token"),
 		Keys:        s.absURL("/keys"),
+		UserInfo:    s.absURL("/userinfo"),
 		Subjects:    []string{"public"},
 		IDTokenAlgs: []string{string(jose.RS256)},
 		Scopes:      []string{"openid", "email", "groups", "profile", "offline_access", "pydio"},
@@ -673,7 +675,14 @@ func (s *Server) handleAuthCode(w http.ResponseWriter, r *http.Request, client s
 	// Pydio
 	claims := authCode.Claims
 	authCode.PClaims.SetToClaims(&claims)
-	accessToken := storage.NewID()
+
+	accessToken, err := s.newAccessToken(authCode.ConnectorID, authCode.Claims)
+	if err != nil {
+		s.logger.Errorf("failed to create new access token: %v", err)
+		s.tokenErrHelper(w, errServerError, "", http.StatusInternalServerError)
+		return
+	}
+
 	//idToken, expiry, err := s.newIDToken(client.ID, authCode.Claims, authCode.Scopes, authCode.Nonce, accessToken, authCode.ConnectorID)
 	idToken, expiry, err := s.newIDToken(client.ID, claims, authCode.Scopes, authCode.Nonce, accessToken, authCode.ConnectorID)
 	if err != nil {
@@ -874,7 +883,13 @@ func (s *Server) handleCredentialGrant(w http.ResponseWriter, r *http.Request, c
 		claims.Profile = identity.Profile
 	}
 
-	accessToken := storage.NewID()
+	// TODO - remove hardcoded pydio
+	accessToken, err := s.newAccessToken("pydio", claims)
+	if err != nil {
+		s.logger.Errorf("failed to create new access token: %v", err)
+		s.tokenErrHelper(w, errServerError, "", http.StatusInternalServerError)
+		return
+	}
 
 	// fake authCode, because Grant Type does not authCode
 	authCode := storage.AuthCode{
@@ -1149,7 +1164,13 @@ func (s *Server) handleRefreshToken(w http.ResponseWriter, r *http.Request, clie
 		Profile:       ident.Profile,
 	}
 
-	accessToken := storage.NewID()
+	accessToken, err := s.newAccessToken(refresh.ConnectorID, claims)
+	if err != nil {
+		s.logger.Errorf("failed to create new access token: %v", err)
+		s.tokenErrHelper(w, errServerError, "", http.StatusInternalServerError)
+		return
+	}
+
 	idToken, expiry, err := s.newIDToken(client.ID, claims, scopes, refresh.Nonce, accessToken, refresh.ConnectorID)
 	if err != nil {
 		s.logger.Errorf("failed to create ID token: %v", err)
@@ -1213,6 +1234,27 @@ func (s *Server) handleRefreshToken(w http.ResponseWriter, r *http.Request, clie
 	}
 
 	s.writeAccessToken(w, idToken, accessToken, rawNewToken, expiry)
+}
+
+func (s *Server) handleUserInfo(w http.ResponseWriter, r *http.Request) {
+	authorization := r.Header.Get("Authorization")
+	parts := strings.Fields(authorization)
+
+	if len(parts) != 2 || !strings.EqualFold(parts[0], "bearer") {
+		msg := "invalid authorization header"
+		w.Header().Set("WWW-Authenticate", fmt.Sprintf(`Bearer realm="dex", error="%s", error_description="%s"`, errInvalidRequest, msg))
+		s.tokenErrHelper(w, errInvalidRequest, msg, http.StatusBadRequest)
+		return
+	}
+
+	decryptedToken, err := s.Decrypt(parts[1])
+	if err != nil {
+		s.tokenErrHelper(w, errInvalidRequest, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(decryptedToken)
 }
 
 func (s *Server) writeAccessToken(w http.ResponseWriter, idToken, accessToken, refreshToken string, expiry time.Time) {

@@ -487,6 +487,12 @@ service TokenService{
             body: "*"
         };
     };
+    // Callback for an oauth process
+    rpc Callback(CallbackRequest) returns (CallbackResponse) {
+        option (google.api.http) = {
+            get: "/auth/callback"
+        };
+    };
 }
 
 // Mailer Service provides simple access to mail functions
@@ -881,12 +887,10 @@ service FrontendService {
 
 // Used only in the Enterprise Distribution
 service LicenseService {
-
     // [Enterprise Only] Display statistics about licenses usage
     rpc LicenseStats(cert.LicenseStatsRequest) returns (cert.LicenseStatsResponse) {
         option(google.api.http) = {
             get: "/license/stats"
         };
     }
-
 }

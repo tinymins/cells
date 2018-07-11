@@ -169,3 +169,17 @@ message ResetPasswordResponse {
     bool Success = 1;
     string Message = 2;
 }
+
+message CallbackRequest{
+    string state = 1;
+    string code = 2;
+    string id_token = 3;
+}
+
+message CallbackResponse{
+    string AccessToken = 1;
+    string TokenType = 2;
+    int64 ExpiresIn = 3;
+    string RefreshToken = 4;
+    string IDToken = 5;
+}

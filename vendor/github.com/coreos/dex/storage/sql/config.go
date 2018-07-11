@@ -164,7 +164,7 @@ func (s *MySQL) Open(logger logrus.FieldLogger) (storage.Storage, error) {
 	return conn, nil
 }
 
-func (s *MySQL) open(logger logrus.FieldLogger) (*conn, error) {		
+func (s *MySQL) open(logger logrus.FieldLogger) (*conn, error) {
 	dexDSN, err := mysql.ParseDSN(s.DSN)
 	if err != nil {
 
@@ -174,8 +174,8 @@ func (s *MySQL) open(logger logrus.FieldLogger) (*conn, error) {
 	//dexDSN.Collation = "utf8_general_ci"
 
 	params := make(map[string]string)
-	params["autocommit"] = "false"
-	params["tx_isolation"] = "SERIALIZABLE"
+	//params["autocommit"] = "false"
+	//params["tx_isolation"] = "SERIALIZABLE"
 	dexDSN.Params = params
 
 	db, err := sql.Open("mysql", dexDSN.FormatDSN())

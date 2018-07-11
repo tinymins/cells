@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -165,6 +166,8 @@ func parseCORSOptions(opts ...CORSOption) *cors {
 	for _, option := range opts {
 		option(ch)
 	}
+
+	fmt.Println(ch)
 
 	return ch
 }

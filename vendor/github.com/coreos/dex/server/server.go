@@ -57,6 +57,10 @@ type Config struct {
 	// domain.
 	AllowedOrigins []string
 
+	// List of allowed methods for CORS requests on discovery, token and keys endpoint.
+	// If none are indicated, CORS methods default to GET POST AND HEAD.
+	AllowedMethods []string
+
 	// If enabled, the server won't prompt the user to approve authorization requests.
 	// Logging in implies approval.
 	SkipApprovalScreen bool
@@ -223,10 +227,17 @@ func newServer(ctx context.Context, c Config, rotationStrategy rotationStrategy)
 	}
 	handleWithCORS := func(p string, h http.HandlerFunc) {
 		var handler http.Handler = h
+		fmt.Printf("\n\n\n%v\n\n\n", c.AllowedMethods)
+		var corsOptions []handlers.CORSOption
+		if len(c.AllowedMethods) > 0 {
+			corsOption := handlers.AllowedMethods(c.AllowedMethods)
+			corsOptions = append(corsOptions, corsOption)
+		}
 		if len(c.AllowedOrigins) > 0 {
 			corsOption := handlers.AllowedOrigins(c.AllowedOrigins)
-			handler = handlers.CORS(corsOption)(handler)
+			corsOptions = append(corsOptions, corsOption)
 		}
+		handler = handlers.CORS(corsOptions...)(handler)
 		r.Handle(path.Join(issuerURL.Path, p), handler)
 	}
 	r.NotFoundHandler = http.HandlerFunc(http.NotFound)
@@ -240,12 +251,13 @@ func newServer(ctx context.Context, c Config, rotationStrategy rotationStrategy)
 	// TODO(ericchiang): rate limit certain paths based on IP.
 	handleWithCORS("/token", s.handleToken)
 	handleWithCORS("/keys", s.handlePublicKeys)
+	handleWithCORS("/userinfo", s.handleUserInfo)
 	handleFunc("/auth", s.handleAuthorization)
 	handleFunc("/auth/{connector}", s.handleConnectorLogin)
 	handleFunc("/callback", s.handleConnectorCallback)
 	handleFunc("/approval", s.handleApproval)
 	handleFunc("/healthz", s.handleHealth)
-	if static != nil{
+	if static != nil {
 		handlePrefix("/static", static)
 	}
 	if theme != nil {

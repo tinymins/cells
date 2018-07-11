@@ -104,6 +104,8 @@ It has these top-level messages:
 	ResetPasswordTokenResponse
 	ResetPasswordRequest
 	ResetPasswordResponse
+	CallbackRequest
+	CallbackResponse
 	UserJobRequest
 	UserJobResponse
 	UserJobsCollection

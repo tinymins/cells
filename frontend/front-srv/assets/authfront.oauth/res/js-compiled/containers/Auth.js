@@ -97,7 +97,9 @@ var Auth = function (_React$Component) {
       var userManager = this.context.oidc.userManager;
 
 
-      console.log(userManager);
+      userManager.events.addUserLoaded(function (loadedUser) {
+        console.log("HERE WE GO", loadedUser);
+      });
 
       //
       // // onAuthStateChanged returns an unsubscribe method

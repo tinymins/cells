@@ -14453,6 +14453,7 @@ utils.intFromLE = intFromLE;
 
 },{"bn.js":15,"minimalistic-assert":106,"minimalistic-crypto-utils":107}],82:[function(require,module,exports){
 module.exports={
+<<<<<<< HEAD
   "_args": [
     [
       "elliptic@6.4.0",
@@ -14461,12 +14462,16 @@ module.exports={
   ],
   "_development": true,
   "_from": "elliptic@6.4.0",
+=======
+  "_from": "elliptic@^6.0.0",
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   "_id": "elliptic@6.4.0",
   "_inBundle": false,
   "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
   "_location": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
+<<<<<<< HEAD
     "type": "version",
     "registry": true,
     "raw": "elliptic@6.4.0",
@@ -14475,14 +14480,30 @@ module.exports={
     "rawSpec": "6.4.0",
     "saveSpec": null,
     "fetchSpec": "6.4.0"
+=======
+    "type": "range",
+    "registry": true,
+    "raw": "elliptic@^6.0.0",
+    "name": "elliptic",
+    "escapedName": "elliptic",
+    "rawSpec": "^6.0.0",
+    "saveSpec": null,
+    "fetchSpec": "^6.0.0"
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   },
   "_requiredBy": [
     "/browserify-sign",
     "/create-ecdh"
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
+<<<<<<< HEAD
   "_spec": "6.4.0",
   "_where": "/Users/gregory/work/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings",
+=======
+  "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
+  "_spec": "elliptic@^6.0.0",
+  "_where": "/Users/ghecquet/go/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings/node_modules/browserify-sign",
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -14490,6 +14511,7 @@ module.exports={
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
   },
+  "bundleDependencies": false,
   "dependencies": {
     "bn.js": "^4.4.0",
     "brorand": "^1.0.1",
@@ -14499,6 +14521,7 @@ module.exports={
     "minimalistic-assert": "^1.0.0",
     "minimalistic-crypto-utils": "^1.0.0"
   },
+  "deprecated": false,
   "description": "EC cryptography",
   "devDependencies": {
     "brfs": "^1.4.3",
@@ -20658,6 +20681,7 @@ Hash.prototype.digest = function (enc) {
   // uint32
   if (bits <= 0xffffffff) {
     this._block.writeUInt32BE(bits, this._blockSize - 4)
+<<<<<<< HEAD
 
   // uint64
   } else {
@@ -20668,6 +20692,18 @@ Hash.prototype.digest = function (enc) {
     this._block.writeUInt32BE(lowBits, this._blockSize - 4)
   }
 
+=======
+
+  // uint64
+  } else {
+    var lowBits = (bits & 0xffffffff) >>> 0
+    var highBits = (bits - lowBits) / 0x100000000
+
+    this._block.writeUInt32BE(highBits, this._blockSize - 8)
+    this._block.writeUInt32BE(lowBits, this._blockSize - 4)
+  }
+
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   this._update(this._block)
   var hash = this._hash()
 
@@ -21623,6 +21659,7 @@ function StringDecoder(encoding) {
       this.text = utf16Text;
       this.end = utf16End;
       nb = 4;
+<<<<<<< HEAD
       break;
     case 'utf8':
       this.fillLast = utf8FillLast;
@@ -21633,10 +21670,118 @@ function StringDecoder(encoding) {
       this.end = base64End;
       nb = 3;
       break;
+=======
+      break;
+    case 'utf8':
+      this.fillLast = utf8FillLast;
+      nb = 4;
+      break;
+    case 'base64':
+      this.text = base64Text;
+      this.end = base64End;
+      nb = 3;
+      break;
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
     default:
       this.write = simpleWrite;
       this.end = simpleEnd;
       return;
+<<<<<<< HEAD
+  }
+  this.lastNeed = 0;
+  this.lastTotal = 0;
+  this.lastChar = Buffer.allocUnsafe(nb);
+}
+
+StringDecoder.prototype.write = function (buf) {
+  if (buf.length === 0) return '';
+  var r;
+  var i;
+  if (this.lastNeed) {
+    r = this.fillLast(buf);
+    if (r === undefined) return '';
+    i = this.lastNeed;
+    this.lastNeed = 0;
+  } else {
+    i = 0;
+  }
+  if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+  return r || '';
+};
+
+StringDecoder.prototype.end = utf8End;
+
+// Returns only complete characters in a Buffer
+StringDecoder.prototype.text = utf8Text;
+
+// Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+StringDecoder.prototype.fillLast = function (buf) {
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+  this.lastNeed -= buf.length;
+};
+
+// Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+// continuation byte. If an invalid byte is detected, -2 is returned.
+function utf8CheckByte(byte) {
+  if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+  return byte >> 6 === 0x02 ? -1 : -2;
+}
+
+// Checks at most 3 bytes at the end of a Buffer in order to detect an
+// incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+// needed to complete the UTF-8 character (if applicable) are returned.
+function utf8CheckIncomplete(self, buf, i) {
+  var j = buf.length - 1;
+  if (j < i) return 0;
+  var nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 1;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) self.lastNeed = nb - 2;
+    return nb;
+  }
+  if (--j < i || nb === -2) return 0;
+  nb = utf8CheckByte(buf[j]);
+  if (nb >= 0) {
+    if (nb > 0) {
+      if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+    }
+    return nb;
+  }
+  return 0;
+}
+
+// Validates as many continuation bytes for a multi-byte UTF-8 character as
+// needed or are available. If we see a non-continuation byte where we expect
+// one, we "replace" the validated continuation bytes we've seen so far with
+// a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
+// behavior. The continuation byte check is included three times in the case
+// where all of the continuation bytes for a character exist in the same buffer.
+// It is also done this way as a slight performance increase instead of using a
+// loop.
+function utf8CheckExtraBytes(self, buf, p) {
+  if ((buf[0] & 0xC0) !== 0x80) {
+    self.lastNeed = 0;
+    return '\ufffd';
+  }
+  if (self.lastNeed > 1 && buf.length > 1) {
+    if ((buf[1] & 0xC0) !== 0x80) {
+      self.lastNeed = 1;
+      return '\ufffd';
+    }
+    if (self.lastNeed > 2 && buf.length > 2) {
+      if ((buf[2] & 0xC0) !== 0x80) {
+        self.lastNeed = 2;
+        return '\ufffd';
+=======
   }
   this.lastNeed = 0;
   this.lastTotal = 0;
@@ -21784,6 +21929,62 @@ function utf16Text(buf, i) {
         this.lastChar[0] = buf[buf.length - 2];
         this.lastChar[1] = buf[buf.length - 1];
         return r.slice(0, -1);
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
+      }
+    }
+    return r;
+  }
+<<<<<<< HEAD
+}
+
+// Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+function utf8FillLast(buf) {
+  var p = this.lastTotal - this.lastNeed;
+  var r = utf8CheckExtraBytes(this, buf, p);
+  if (r !== undefined) return r;
+  if (this.lastNeed <= buf.length) {
+    buf.copy(this.lastChar, p, 0, this.lastNeed);
+    return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+  }
+  buf.copy(this.lastChar, p, 0, buf.length);
+  this.lastNeed -= buf.length;
+}
+
+// Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+// partial character, the character's bytes are buffered until the required
+// number of bytes are available.
+function utf8Text(buf, i) {
+  var total = utf8CheckIncomplete(this, buf, i);
+  if (!this.lastNeed) return buf.toString('utf8', i);
+  this.lastTotal = total;
+  var end = buf.length - (total - this.lastNeed);
+  buf.copy(this.lastChar, 0, end);
+  return buf.toString('utf8', i, end);
+}
+
+// For UTF-8, a replacement character is added when ending on a partial
+// character.
+function utf8End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) return r + '\ufffd';
+  return r;
+}
+
+// UTF-16LE typically needs two bytes per character, but even if we have an even
+// number of bytes available, we need to check if we end on a leading/high
+// surrogate. In that case, we need to wait for the next two bytes in order to
+// decode the last character properly.
+function utf16Text(buf, i) {
+  if ((buf.length - i) % 2 === 0) {
+    var r = buf.toString('utf16le', i);
+    if (r) {
+      var c = r.charCodeAt(r.length - 1);
+      if (c >= 0xD800 && c <= 0xDBFF) {
+        this.lastNeed = 2;
+        this.lastTotal = 4;
+        this.lastChar[0] = buf[buf.length - 2];
+        this.lastChar[1] = buf[buf.length - 1];
+        return r.slice(0, -1);
       }
     }
     return r;
@@ -21805,6 +22006,25 @@ function utf16End(buf) {
   return r;
 }
 
+=======
+  this.lastNeed = 1;
+  this.lastTotal = 2;
+  this.lastChar[0] = buf[buf.length - 1];
+  return buf.toString('utf16le', i, buf.length - 1);
+}
+
+// For UTF-16LE we do not explicitly append special replacement characters if we
+// end on a partial character, we simply let v8 handle that.
+function utf16End(buf) {
+  var r = buf && buf.length ? this.write(buf) : '';
+  if (this.lastNeed) {
+    var end = this.lastTotal - this.lastNeed;
+    return r + this.lastChar.toString('utf16le', 0, end);
+  }
+  return r;
+}
+
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
 function base64Text(buf, i) {
   var n = (buf.length - i) % 3;
   if (n === 0) return buf.toString('base64', i);
@@ -27353,7 +27573,11 @@ Metadata.MetaTypes = {
 exports['default'] = Metadata;
 module.exports = exports['default'];
 
+<<<<<<< HEAD
 },{"pydio/http/api":"pydio/http/api","pydio/http/resources-manager":"pydio/http/resources-manager","pydio/http/rest-api":"pydio/http/rest-api"}],178:[function(require,module,exports){
+=======
+},{"pydio/http/api":"pydio/http/api","pydio/http/rest-api":"pydio/http/rest-api"}],178:[function(require,module,exports){
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
 /*
  * Copyright 2007-2017 Charles du Jeu - Abstrium SAS <team (at) pyd.io>
  * This file is part of Pydio.

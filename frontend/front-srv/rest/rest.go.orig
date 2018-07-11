@@ -188,7 +188,7 @@ func (a *FrontendHandler) FrontSession(req *restful.Request, rsp *restful.Respon
 	httpReq.Header.Add("Authorization", basic)
 
 	res, err := http.DefaultClient.Do(httpReq)
->>>>>>> Poc-ing oauth
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
 	if err != nil {
 		service.RestError401(req, rsp, err)
 		return

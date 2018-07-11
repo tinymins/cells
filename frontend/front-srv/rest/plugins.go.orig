@@ -39,11 +39,11 @@ var BasePluginsBox = frontend.PluginBox{
 		"auth.pydio",
 		"authfront.keystore",
 		"authfront.session_login",
+		"authfront.oauth",
 <<<<<<< HEAD
 =======
-		"authfront.oauth",
 		"boot.conf",
->>>>>>> Poc-ing oauth
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
 		"conf.pydio",
 		"core.auth",
 		"core.authfront",

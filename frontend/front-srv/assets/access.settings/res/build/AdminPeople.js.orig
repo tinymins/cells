@@ -14456,28 +14456,31 @@ module.exports={
 <<<<<<< HEAD
   "_args": [
     [
-      {
-        "raw": "elliptic@^6.0.0",
-        "scope": null,
-        "escapedName": "elliptic",
-        "name": "elliptic",
-        "rawSpec": "^6.0.0",
-        "spec": ">=6.0.0 <7.0.0",
-        "type": "range"
-      },
-      "/Users/charles/Sources/go/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings/node_modules/browserify-sign"
+      "elliptic@6.4.0",
+      "/Users/gregory/work/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings"
     ]
   ],
-  "_from": "elliptic@>=6.0.0 <7.0.0",
+  "_development": true,
+  "_from": "elliptic@6.4.0",
 =======
   "_from": "elliptic@^6.0.0",
->>>>>>> Poc-ing oauth
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   "_id": "elliptic@6.4.0",
   "_inBundle": false,
   "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
   "_location": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
+<<<<<<< HEAD
+    "type": "version",
+    "registry": true,
+    "raw": "elliptic@6.4.0",
+    "name": "elliptic",
+    "escapedName": "elliptic",
+    "rawSpec": "6.4.0",
+    "saveSpec": null,
+    "fetchSpec": "6.4.0"
+=======
     "type": "range",
     "registry": true,
     "raw": "elliptic@^6.0.0",
@@ -14486,19 +14489,21 @@ module.exports={
     "rawSpec": "^6.0.0",
     "saveSpec": null,
     "fetchSpec": "^6.0.0"
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   },
   "_requiredBy": [
     "/browserify-sign",
     "/create-ecdh"
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
+<<<<<<< HEAD
+  "_spec": "6.4.0",
+  "_where": "/Users/gregory/work/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings",
+=======
   "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
   "_spec": "elliptic@^6.0.0",
-<<<<<<< HEAD
-  "_where": "/Users/charles/Sources/go/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings/node_modules/browserify-sign",
-=======
   "_where": "/Users/ghecquet/go/src/github.com/pydio/cells/frontend/front-srv/assets/access.settings/node_modules/browserify-sign",
->>>>>>> Poc-ing oauth
+>>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -19437,21 +19442,6 @@ function Transform(options) {
 
   // When the writable side finishes, then flush out anything remaining.
   this.on('prefinish', prefinish);
-<<<<<<< HEAD
-=======
-}
-
-function prefinish() {
-  var _this = this;
-
-  if (typeof this._flush === 'function') {
-    this._flush(function (er, data) {
-      done(_this, er, data);
-    });
-  } else {
-    done(this, null, null);
-  }
->>>>>>> Poc-ing oauth
 }
 
 function prefinish() {
@@ -20353,7 +20343,6 @@ function destroy(err, cb) {
   });
 
   return this;
-<<<<<<< HEAD
 }
 
 function undestroy() {
@@ -20384,38 +20373,6 @@ module.exports = {
 },{"process-nextick-args":118}],136:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-=======
-}
-
-function undestroy() {
-  if (this._readableState) {
-    this._readableState.destroyed = false;
-    this._readableState.reading = false;
-    this._readableState.ended = false;
-    this._readableState.endEmitted = false;
-  }
-
-  if (this._writableState) {
-    this._writableState.destroyed = false;
-    this._writableState.ended = false;
-    this._writableState.ending = false;
-    this._writableState.finished = false;
-    this._writableState.errorEmitted = false;
-  }
-}
-
-function emitErrorNT(self, err) {
-  self.emit('error', err);
-}
-
-module.exports = {
-  destroy: destroy,
-  undestroy: undestroy
-};
-},{"process-nextick-args":118}],136:[function(require,module,exports){
-module.exports = require('events').EventEmitter;
-
->>>>>>> Poc-ing oauth
 },{"events":83}],137:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
@@ -21625,7 +21582,6 @@ Stream.prototype.pipe = function(dest, options) {
 // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 'use strict';
-<<<<<<< HEAD
 
 /*<replacement>*/
 
@@ -21701,83 +21657,6 @@ function StringDecoder(encoding) {
       nb = 3;
       break;
     default:
-=======
-
-/*<replacement>*/
-
-var Buffer = require('safe-buffer').Buffer;
-/*</replacement>*/
-
-var isEncoding = Buffer.isEncoding || function (encoding) {
-  encoding = '' + encoding;
-  switch (encoding && encoding.toLowerCase()) {
-    case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
-      return true;
-    default:
-      return false;
-  }
-};
-
-function _normalizeEncoding(enc) {
-  if (!enc) return 'utf8';
-  var retried;
-  while (true) {
-    switch (enc) {
-      case 'utf8':
-      case 'utf-8':
-        return 'utf8';
-      case 'ucs2':
-      case 'ucs-2':
-      case 'utf16le':
-      case 'utf-16le':
-        return 'utf16le';
-      case 'latin1':
-      case 'binary':
-        return 'latin1';
-      case 'base64':
-      case 'ascii':
-      case 'hex':
-        return enc;
-      default:
-        if (retried) return; // undefined
-        enc = ('' + enc).toLowerCase();
-        retried = true;
-    }
-  }
-};
-
-// Do not cache `Buffer.isEncoding` when checking encoding names as some
-// modules monkey-patch it to support additional encodings
-function normalizeEncoding(enc) {
-  var nenc = _normalizeEncoding(enc);
-  if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
-  return nenc || enc;
-}
-
-// StringDecoder provides an interface for efficiently splitting a series of
-// buffers into a series of JS strings without breaking apart multi-byte
-// characters.
-exports.StringDecoder = StringDecoder;
-function StringDecoder(encoding) {
-  this.encoding = normalizeEncoding(encoding);
-  var nb;
-  switch (this.encoding) {
-    case 'utf16le':
-      this.text = utf16Text;
-      this.end = utf16End;
-      nb = 4;
-      break;
-    case 'utf8':
-      this.fillLast = utf8FillLast;
-      nb = 4;
-      break;
-    case 'base64':
-      this.text = base64Text;
-      this.end = base64End;
-      nb = 3;
-      break;
-    default:
->>>>>>> Poc-ing oauth
       this.write = simpleWrite;
       this.end = simpleEnd;
       return;
@@ -22049,7 +21928,6 @@ function config (name) {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],154:[function(require,module,exports){
-<<<<<<< HEAD
 'use strict';
 
 var crypto = require('crypto')
@@ -22090,48 +21968,6 @@ function generateUuid(callback) {
   if (typeof callback !== 'function') return generateUuidSync();
   return generateUuidAsync(callback);
 }
-=======
-'use strict';
-
-var crypto = require('crypto')
-    ,uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
-    ;
-
-exports = module.exports = generateUuid;
-exports.async = generateUuidAsync;
-exports.sync = generateUuidSync;
-exports.valid = generateUuid;
-
-
-function isUUID(uuid) {
-  return uuidPattern.test(uuid);
-}
-
-
-function generateUuidSync() {
-  var rnd = crypto.randomBytes(16);
-  rnd[6] = (rnd[6] & 0x0f) | 0x40;
-  rnd[8] = (rnd[8] & 0x3f) | 0x80;
-  rnd = rnd.toString('hex').match(/(.{8})(.{4})(.{4})(.{4})(.{12})/);
-  rnd.shift();
-  return rnd.join('-');
-}
-
-function generateUuidAsync(callback) {
-  crypto.randomBytes(16, function(err, rnd) {
-    rnd[6] = (rnd[6] & 0x0f) | 0x40;
-    rnd[8] = (rnd[8] & 0x3f) | 0x80;
-    rnd = rnd.toString('hex').match(/(.{8})(.{4})(.{4})(.{4})(.{12})/);
-    rnd.shift();
-    callback(null, rnd.join('-'));
-  });
-}
-
-function generateUuid(callback) {
-  if (typeof callback !== 'function') return generateUuidSync();
-  return generateUuidAsync(callback);
-}
->>>>>>> Poc-ing oauth
 
 },{"crypto":56}],155:[function(require,module,exports){
 var indexOf = require('indexof');

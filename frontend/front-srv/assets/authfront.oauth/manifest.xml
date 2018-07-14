@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="authfront.oauth" enabled="always" label="CONF_MESSAGE[OAuth Authentication]"
+<plugin id="authfront.oauth" enabled="true" label="CONF_MESSAGE[OAuth Authentication]"
           description="CONF_MESSAGE[Oauth authentication with Dex]"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.pydio/pydio_registry.xsd">
     <client_settings>
@@ -20,7 +20,18 @@
                 <rightsContext noUser="false" userLogged="hidden" guestLogged="show" read="false" write="false" adminOnly=""/>
                 <processing>
                     <clientCallback module="OAuth.login"/>
-                    <serverCallback module="OAuth.login"/>
+                </processing>
+            </action>
+            <action name="logout" expireDefault="true">
+                <gui text="164" title="169" iconClass="mdi mdi-logout"
+                     accessKey="" hasAccessKey="false">
+                    <context selection="false" dir="" recycle="false"
+                             contextMenu="false" actionBar="true" actionBarGroup="zlogin,minisite">
+                    </context>
+                </gui>
+                <rightsContext noUser="false" userLogged="only" guestLogged="hidden" read="false" write="false" adminOnly=""/>
+                <processing>
+                    <clientCallback module="OAuth.logout"/>
                 </processing>
             </action>
         </actions>

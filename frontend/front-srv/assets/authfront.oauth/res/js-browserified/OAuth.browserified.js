@@ -2832,7 +2832,6 @@ var LoginDialog = function (_React$Component) {
     _createClass(LoginDialog, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log("Mounting");
             this.props.signIn();
         }
     }, {
@@ -2857,6 +2856,8 @@ var Dialog = function (_React$Component2) {
     _createClass(Dialog, [{
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             return _react2.default.createElement(
                 _OIDCProvider2.default,
                 { oidc: _oidc2.default },
@@ -2864,6 +2865,12 @@ var Dialog = function (_React$Component2) {
                     _Auth2.default,
                     null,
                     function (auth) {
+                        if (auth.isAuthed) {
+                            _this3.props.onDismiss();
+
+                            return null;
+                        }
+
                         return _react2.default.createElement(LoginDialog, auth);
                     }
                 )
@@ -2877,7 +2884,104 @@ var Dialog = function (_React$Component2) {
 exports.default = Dialog;
 
 
-},{"../containers/Auth":18,"../containers/OIDCProvider":20,"../services/oidc":24,"react":15}],17:[function(require,module,exports){
+},{"../containers/Auth":19,"../containers/OIDCProvider":21,"../services/oidc":25,"react":15}],17:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Auth = require('../containers/Auth');
+
+var _Auth2 = _interopRequireDefault(_Auth);
+
+var _OIDCProvider = require('../containers/OIDCProvider');
+
+var _OIDCProvider2 = _interopRequireDefault(_OIDCProvider);
+
+var _oidc = require('../services/oidc');
+
+var _oidc2 = _interopRequireDefault(_oidc);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LoginDialog = function (_React$Component) {
+    _inherits(LoginDialog, _React$Component);
+
+    function LoginDialog() {
+        _classCallCheck(this, LoginDialog);
+
+        return _possibleConstructorReturn(this, (LoginDialog.__proto__ || Object.getPrototypeOf(LoginDialog)).apply(this, arguments));
+    }
+
+    _createClass(LoginDialog, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            this.props.signOut();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement('div', null);
+        }
+    }]);
+
+    return LoginDialog;
+}(_react2.default.Component);
+
+var Dialog = function (_React$Component2) {
+    _inherits(Dialog, _React$Component2);
+
+    function Dialog() {
+        _classCallCheck(this, Dialog);
+
+        return _possibleConstructorReturn(this, (Dialog.__proto__ || Object.getPrototypeOf(Dialog)).apply(this, arguments));
+    }
+
+    _createClass(Dialog, [{
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            return _react2.default.createElement(
+                _OIDCProvider2.default,
+                { oidc: _oidc2.default },
+                _react2.default.createElement(
+                    _Auth2.default,
+                    null,
+                    function (auth) {
+                        if (auth.isAuthed) {
+                            _this3.props.onDismiss();
+
+                            return null;
+                        }
+
+                        return _react2.default.createElement(LoginDialog, auth);
+                    }
+                )
+            );
+        }
+    }]);
+
+    return Dialog;
+}(_react2.default.Component);
+
+exports.default = Dialog;
+
+
+},{"../containers/Auth":19,"../containers/OIDCProvider":21,"../services/oidc":25,"react":15}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3038,11 +3142,11 @@ Auth.contextTypes = {
 exports.default = Auth;
 
 
-},{"prop-types":11,"react":15}],18:[function(require,module,exports){
+},{"prop-types":11,"react":15}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3066,214 +3170,109 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var INITIAL_STATE = {
-  uid: '',
-  isAnonymous: null
-  // // some other properties from the user object that may be useful
-  // email: '',
-  // displayName: '',
-  // photoURL: '',
+    uid: '',
+    isAnonymous: null
+    // // some other properties from the user object that may be useful
+    // email: '',
+    // displayName: '',
+    // photoURL: '',
 };
 
 var Auth = function (_React$Component) {
-  _inherits(Auth, _React$Component);
+    _inherits(Auth, _React$Component);
 
-  function Auth() {
-    var _ref;
+    function Auth() {
+        var _ref;
 
-    var _temp, _this, _ret;
+        var _temp, _this, _ret;
 
-    _classCallCheck(this, Auth);
+        _classCallCheck(this, Auth);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Auth.__proto__ || Object.getPrototypeOf(Auth)).call.apply(_ref, [this].concat(args))), _this), _this.state = INITIAL_STATE, _this.handleSignIn = function (provider) {
+            var userManager = _this.context.oidc.userManager;
+
+
+            userManager.getUser().then(function (user) {
+                if (!user) {
+                    throw "User not found";
+                }
+
+                _this.signIn(user);
+            }).catch(function () {
+                console.log("Signin popup");
+                userManager.signinPopup();
+            });
+        }, _this.handleSignOut = function () {
+            var userManager = _this.context.oidc.userManager;
+
+
+            userManager.signoutPopup();
+
+            pydio.loadXmlRegistry();
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Auth.__proto__ || Object.getPrototypeOf(Auth)).call.apply(_ref, [this].concat(args))), _this), _this.state = INITIAL_STATE, _this.handleSignIn = function (provider) {
-      var userManager = _this.context.oidc.userManager;
+    _createClass(Auth, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var userManager = this.context.oidc.userManager;
 
 
-      userManager.signinPopup();
-
-      // const { auth } = this.context.firebase;
-      //
-      // switch (provider) {
-      //   // the auth listener will handle the success cases
-      //   case 'google':
-      //     return auth()
-      //       .signInWithPopup(new auth.GoogleAuthProvider())
-      //       .catch(error => {
-      //         // eslint-disable-next-line no-console
-      //         console.error(error);
-      //         // TODO: notify the user of the error
-      //         return error;
-      //       });
-      //
-      //   case 'anonymous':
-      //     return auth()
-      //       .signInAnonymously()
-      //       .catch(error => {
-      //         // eslint-disable-next-line no-console
-      //         console.error(error);
-      //         // TODO: notify the user of the error
-      //         return error;
-      //       });
-      //
-      //   default:
-      //     const reason = 'Invalid provider passed to signIn method';
-      //     // eslint-disable-next-line no-console
-      //     console.error(reason);
-      //     return Promise.reject(reason);
-      // }
-    }, _this.handleSignOut = function () {
-      var auth = _this.context.firebase.auth;
+            userManager.events.addUserLoaded(function (loadedUser) {
+                return _this2.signIn(loadedUser);
+            });
+        }
+    }, {
+        key: 'signIn',
+        value: function signIn(user) {
+            var id_token = user.id_token,
+                expires_at = user.expires_at;
 
 
-      return auth().signOut();
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
+            PydioApi.JWT_DATA = {
+                jwt: id_token,
+                expirationTime: expires_at
+            };
 
-  _createClass(Auth, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var userManager = this.context.oidc.userManager;
+            pydio.loadXmlRegistry();
 
+            this.setState({
+                idToken: id_token
+            });
+        }
+    }, {
+        key: 'signOut',
+        value: function signOut() {
+            this.setState(INITIAL_STATE);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var isAuthed = !!this.state.idToken;
+            return this.props.children(_extends({}, this.state, {
+                signIn: this.handleSignIn.bind(this),
+                signOut: this.handleSignOut.bind(this),
+                isAuthed: isAuthed
+            }));
+        }
+    }]);
 
-<<<<<<< HEAD
-      userManager.events.addUserLoaded(function (loadedUser) {
-        console.log("HERE WE GO", loadedUser);
-      });
-=======
-      console.log(userManager);
->>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
-
-      //
-      // // onAuthStateChanged returns an unsubscribe method
-      // this.stopAuthListener = auth().onAuthStateChanged(user => {
-      //   if (user) {
-      //     // if user exists sign-in!
-      //     this.signIn(user);
-      //   } else {
-      //     // otherwise sign-out!
-      //     this.signOut();
-      //   }
-      // });
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // this.stopAuthListener();
-    }
-  }, {
-    key: 'signIn',
-    value: function signIn(user) {
-      var uid = user.uid,
-          isAnonymous = user.isAnonymous;
-
-
-      this.setState({
-        uid: uid,
-        isAnonymous: isAnonymous
-      });
-    }
-  }, {
-    key: 'signOut',
-    value: function signOut() {
-      this.setState(INITIAL_STATE);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      // If uid doesn't exist in state, the user is not signed in.
-      // A uid will exist if the user is signed in anonymously.
-      // We'll consider anonymous users as unauthed for this variable.
-      var isAuthed = !!(this.state.uid && !this.state.isAnonymous);
-
-      return this.props.children(_extends({}, this.state, {
-        signIn: this.handleSignIn,
-        signOut: this.handleSignOut,
-        isAuthed: isAuthed
-      }));
-    }
-  }]);
-
-  return Auth;
+    return Auth;
 }(_react2.default.Component);
 
 Auth.propTypes = {
-  children: _propTypes2.default.func.isRequired
+    children: _propTypes2.default.func.isRequired
 };
 Auth.contextTypes = {
-  oidc: _propTypes2.default.object
+    oidc: _propTypes2.default.object
 };
 exports.default = Auth;
-
-
-},{"prop-types":11,"react":15}],19:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _propTypes = require('prop-types');
-
-var _propTypes2 = _interopRequireDefault(_propTypes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // ./src/containers/OIDCProvider.js
-
-
-var OIDCProvider = function (_React$Component) {
-  _inherits(OIDCProvider, _React$Component);
-
-  function OIDCProvider() {
-    _classCallCheck(this, OIDCProvider);
-
-    return _possibleConstructorReturn(this, (OIDCProvider.__proto__ || Object.getPrototypeOf(OIDCProvider)).apply(this, arguments));
-  }
-
-  _createClass(OIDCProvider, [{
-    key: 'getChildContext',
-    value: function getChildContext() {
-      var oidc = this.props.oidc;
-
-
-      return {
-        oidc: oidc
-      };
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var children = this.props.children;
-
-
-      return children;
-    }
-  }]);
-
-  return OIDCProvider;
-}(_react2.default.Component);
-
-OIDCProvider.propTypes = {
-  children: _propTypes2.default.element,
-  oidc: _propTypes2.default.object.isRequired
-};
-OIDCProvider.childContextTypes = {
-  oidc: _propTypes2.default.object
-};
-exports.default = OIDCProvider;
 
 
 },{"prop-types":11,"react":15}],20:[function(require,module,exports){
@@ -3345,6 +3344,74 @@ exports.default = OIDCProvider;
 
 
 },{"prop-types":11,"react":15}],21:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // ./src/containers/OIDCProvider.js
+
+
+var OIDCProvider = function (_React$Component) {
+  _inherits(OIDCProvider, _React$Component);
+
+  function OIDCProvider() {
+    _classCallCheck(this, OIDCProvider);
+
+    return _possibleConstructorReturn(this, (OIDCProvider.__proto__ || Object.getPrototypeOf(OIDCProvider)).apply(this, arguments));
+  }
+
+  _createClass(OIDCProvider, [{
+    key: 'getChildContext',
+    value: function getChildContext() {
+      var oidc = this.props.oidc;
+
+
+      return {
+        oidc: oidc
+      };
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var children = this.props.children;
+
+
+      return children;
+    }
+  }]);
+
+  return OIDCProvider;
+}(_react2.default.Component);
+
+OIDCProvider.propTypes = {
+  children: _propTypes2.default.element,
+  oidc: _propTypes2.default.object.isRequired
+};
+OIDCProvider.childContextTypes = {
+  oidc: _propTypes2.default.object
+};
+exports.default = OIDCProvider;
+
+
+},{"prop-types":11,"react":15}],22:[function(require,module,exports){
 "use strict";
 
 var _Auth = require("./containers/Auth");
@@ -3371,7 +3438,7 @@ window.OAuth = {
 };
 
 
-},{"./containers/Auth":18,"./containers/OIDCProvider":20,"./services/oidc":24}],22:[function(require,module,exports){
+},{"./containers/Auth":19,"./containers/OIDCProvider":21,"./services/oidc":25}],23:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3392,20 +3459,27 @@ var _dialog = require("./components/dialog");
 
 var _dialog2 = _interopRequireDefault(_dialog);
 
+var _logout = require("./components/logout");
+
+var _logout2 = _interopRequireDefault(_logout);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.OAuth = {
     Dialog: _dialog2.default,
+    LogoutDialog: _logout2.default,
     OIDCProvider: _OIDCProvider2.default,
     oidc: _oidc2.default,
     login: function login(props) {
-        console.log("Opening happens multiple times");
         pydio.UI.openComponentInModal('OAuth', 'Dialog', _extends({}, props, { blur: true }));
+    },
+    logout: function logout(props) {
+        pydio.UI.openComponentInModal('OAuth', 'LogoutDialog', _extends({}, props, { blur: true }));
     }
 };
 
 
-},{"./components/dialog":16,"./containers/OIDCProvider":20,"./services/oidc":24,"react":15}],23:[function(require,module,exports){
+},{"./components/dialog":16,"./components/logout":17,"./containers/OIDCProvider":21,"./services/oidc":25,"react":15}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3433,7 +3507,7 @@ var OpenIDConnect = function OpenIDConnect() {
 exports.default = new OpenIDConnect();
 
 
-},{"oidc-client":6}],24:[function(require,module,exports){
+},{"oidc-client":6}],25:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3445,33 +3519,23 @@ var _oidcClient = require("oidc-client");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var config = {
-<<<<<<< HEAD
-    authority: 'http://127.0.0.1:53205/dex',
-    client_id: "cells-front",
-    popup_redirect_uri: "http://172.17.2.104:8080/plug/authfront.oauth/res/popup.html",
-    response_type: "id_token token",
-    scope: "openid profile"
-=======
     authority: 'http://127.0.0.1:62134/dex',
     client_id: "cells-front",
-    redirect_uri: "http://127.0.0.1:5555/callback",
-    response_type: "code",
-    scope: "openid"
->>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
+    popup_redirect_uri: "http://192.168.1.78:8080/plug/authfront.oauth/res/popup.html",
+    response_type: "id_token token",
+    scope: "openid profile pydio",
+    loadUserInfo: false
 };
 
 var OpenIDConnect = function OpenIDConnect() {
     _classCallCheck(this, OpenIDConnect);
 
     this.userManager = new _oidcClient.UserManager(config);
-<<<<<<< HEAD
     _oidcClient.Log.logger = console;
     _oidcClient.Log.level = _oidcClient.Log.INFO;
-=======
->>>>>>> 31a5342865f65bb395624a7bba534e3db2278552
 };
 
 exports.default = new OpenIDConnect();
 
 
-},{"oidc-client":6}]},{},[16,17,18,19,20,21,22,23,24]);
+},{"oidc-client":6}]},{},[16,17,18,19,20,21,22,23,24,25]);

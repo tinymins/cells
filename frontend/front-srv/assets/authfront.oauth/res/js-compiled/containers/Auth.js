@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -25,140 +25,107 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var INITIAL_STATE = {
-  uid: '',
-  isAnonymous: null
-  // // some other properties from the user object that may be useful
-  // email: '',
-  // displayName: '',
-  // photoURL: '',
+    uid: '',
+    isAnonymous: null
+    // // some other properties from the user object that may be useful
+    // email: '',
+    // displayName: '',
+    // photoURL: '',
 };
 
 var Auth = function (_React$Component) {
-  _inherits(Auth, _React$Component);
+    _inherits(Auth, _React$Component);
 
-  function Auth() {
-    var _ref;
+    function Auth() {
+        var _ref;
 
-    var _temp, _this, _ret;
+        var _temp, _this, _ret;
 
-    _classCallCheck(this, Auth);
+        _classCallCheck(this, Auth);
 
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Auth.__proto__ || Object.getPrototypeOf(Auth)).call.apply(_ref, [this].concat(args))), _this), _this.state = INITIAL_STATE, _this.handleSignIn = function (provider) {
+            var userManager = _this.context.oidc.userManager;
+
+
+            userManager.getUser().then(function (user) {
+                if (!user) {
+                    throw "User not found";
+                }
+
+                _this.signIn(user);
+            }).catch(function () {
+                console.log("Signin popup");
+                userManager.signinPopup();
+            });
+        }, _this.handleSignOut = function () {
+            var userManager = _this.context.oidc.userManager;
+
+
+            userManager.signoutPopup();
+
+            pydio.loadXmlRegistry();
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Auth.__proto__ || Object.getPrototypeOf(Auth)).call.apply(_ref, [this].concat(args))), _this), _this.state = INITIAL_STATE, _this.handleSignIn = function (provider) {
-      var userManager = _this.context.oidc.userManager;
+    _createClass(Auth, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            var userManager = this.context.oidc.userManager;
 
 
-      userManager.signinPopup();
-
-      // const { auth } = this.context.firebase;
-      //
-      // switch (provider) {
-      //   // the auth listener will handle the success cases
-      //   case 'google':
-      //     return auth()
-      //       .signInWithPopup(new auth.GoogleAuthProvider())
-      //       .catch(error => {
-      //         // eslint-disable-next-line no-console
-      //         console.error(error);
-      //         // TODO: notify the user of the error
-      //         return error;
-      //       });
-      //
-      //   case 'anonymous':
-      //     return auth()
-      //       .signInAnonymously()
-      //       .catch(error => {
-      //         // eslint-disable-next-line no-console
-      //         console.error(error);
-      //         // TODO: notify the user of the error
-      //         return error;
-      //       });
-      //
-      //   default:
-      //     const reason = 'Invalid provider passed to signIn method';
-      //     // eslint-disable-next-line no-console
-      //     console.error(reason);
-      //     return Promise.reject(reason);
-      // }
-    }, _this.handleSignOut = function () {
-      var auth = _this.context.firebase.auth;
+            userManager.events.addUserLoaded(function (loadedUser) {
+                return _this2.signIn(loadedUser);
+            });
+        }
+    }, {
+        key: 'signIn',
+        value: function signIn(user) {
+            var id_token = user.id_token,
+                expires_at = user.expires_at;
 
 
-      return auth().signOut();
-    }, _temp), _possibleConstructorReturn(_this, _ret);
-  }
+            PydioApi.JWT_DATA = {
+                jwt: id_token,
+                expirationTime: expires_at
+            };
 
-  _createClass(Auth, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var userManager = this.context.oidc.userManager;
+            pydio.loadXmlRegistry();
 
+            this.setState({
+                idToken: id_token
+            });
+        }
+    }, {
+        key: 'signOut',
+        value: function signOut() {
+            this.setState(INITIAL_STATE);
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var isAuthed = !!this.state.idToken;
+            return this.props.children(_extends({}, this.state, {
+                signIn: this.handleSignIn.bind(this),
+                signOut: this.handleSignOut.bind(this),
+                isAuthed: isAuthed
+            }));
+        }
+    }]);
 
-      userManager.events.addUserLoaded(function (loadedUser) {
-        console.log("HERE WE GO", loadedUser);
-      });
-
-      //
-      // // onAuthStateChanged returns an unsubscribe method
-      // this.stopAuthListener = auth().onAuthStateChanged(user => {
-      //   if (user) {
-      //     // if user exists sign-in!
-      //     this.signIn(user);
-      //   } else {
-      //     // otherwise sign-out!
-      //     this.signOut();
-      //   }
-      // });
-    }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // this.stopAuthListener();
-    }
-  }, {
-    key: 'signIn',
-    value: function signIn(user) {
-      var uid = user.uid,
-          isAnonymous = user.isAnonymous;
-
-
-      this.setState({
-        uid: uid,
-        isAnonymous: isAnonymous
-      });
-    }
-  }, {
-    key: 'signOut',
-    value: function signOut() {
-      this.setState(INITIAL_STATE);
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      // If uid doesn't exist in state, the user is not signed in.
-      // A uid will exist if the user is signed in anonymously.
-      // We'll consider anonymous users as unauthed for this variable.
-      var isAuthed = !!(this.state.uid && !this.state.isAnonymous);
-
-      return this.props.children(_extends({}, this.state, {
-        signIn: this.handleSignIn,
-        signOut: this.handleSignOut,
-        isAuthed: isAuthed
-      }));
-    }
-  }]);
-
-  return Auth;
+    return Auth;
 }(_react2.default.Component);
 
 Auth.propTypes = {
-  children: _propTypes2.default.func.isRequired
+    children: _propTypes2.default.func.isRequired
 };
 Auth.contextTypes = {
-  oidc: _propTypes2.default.object
+    oidc: _propTypes2.default.object
 };
 exports.default = Auth;
 //# sourceMappingURL=Auth.js.map

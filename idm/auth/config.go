@@ -121,6 +121,7 @@ type Web struct {
 	TLSCert        string   `json:"tlsCert"`
 	TLSKey         string   `json:"tlsKey"`
 	AllowedMethods []string `json:"allowedMethods"`
+	AllowedHeaders []string `json:"allowedHeaders"`
 	AllowedOrigins []string `json:"allowedOrigins"`
 }
 

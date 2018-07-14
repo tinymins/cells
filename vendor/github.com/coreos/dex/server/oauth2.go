@@ -369,8 +369,6 @@ func (s *Server) newIDToken(clientID string, claims storage.Claims, scopes []str
 	scopes = append(scopes, scopePydio)
 	for _, scope := range scopes {
 
-		//s.logger.Info("scope scan range: ", scope)
-
 		switch {
 		case scope == scopeEmail:
 			tok.Email = claims.Email
@@ -380,6 +378,8 @@ func (s *Server) newIDToken(clientID string, claims storage.Claims, scopes []str
 		case scope == scopeProfile:
 			tok.Name = claims.Username
 		case scope == scopePydio:
+
+			fmt.Println("Adding scopes ", claims)
 			tok.DisplayName = claims.DisplayName
 			tok.AuthSource = claims.AuthSource
 			tok.GroupPath = claims.GroupPath
@@ -403,6 +403,8 @@ func (s *Server) newIDToken(clientID string, claims storage.Claims, scopes []str
 			tok.Audience = append(tok.Audience, peerID)
 		}
 	}
+
+	fmt.Println("\n\n\nToken roles are ", tok.Roles)
 
 	if len(tok.Audience) == 0 {
 		// Client didn't ask for cross client audience. Set the current
@@ -669,6 +671,8 @@ func (s *Server) Decrypt(message string) ([]byte, error) {
 	if keys.SigningKey == nil {
 		return nil, fmt.Errorf("no private keys found")
 	}
+
+	fmt.Println(message)
 
 	// Parse the serialized, encrypted JWE object. An error would indicate that
 	// the given input did not represent a valid message.

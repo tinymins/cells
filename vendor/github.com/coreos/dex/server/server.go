@@ -57,6 +57,9 @@ type Config struct {
 	// domain.
 	AllowedOrigins []string
 
+	// List of allowed headers for CORS requests on discovery, token and keys endpoint.
+	AllowedHeaders []string
+
 	// List of allowed methods for CORS requests on discovery, token and keys endpoint.
 	// If none are indicated, CORS methods default to GET POST AND HEAD.
 	AllowedMethods []string
@@ -227,8 +230,11 @@ func newServer(ctx context.Context, c Config, rotationStrategy rotationStrategy)
 	}
 	handleWithCORS := func(p string, h http.HandlerFunc) {
 		var handler http.Handler = h
-		fmt.Printf("\n\n\n%v\n\n\n", c.AllowedMethods)
 		var corsOptions []handlers.CORSOption
+		if len(c.AllowedHeaders) > 0 {
+			corsOption := handlers.AllowedHeaders(c.AllowedHeaders)
+			corsOptions = append(corsOptions, corsOption)
+		}
 		if len(c.AllowedMethods) > 0 {
 			corsOption := handlers.AllowedMethods(c.AllowedMethods)
 			corsOptions = append(corsOptions, corsOption)

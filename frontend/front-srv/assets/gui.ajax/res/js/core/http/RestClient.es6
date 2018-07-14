@@ -96,6 +96,7 @@ class JwtApiClient extends ApiClient{
     jwtFromCredentials(login, password) {
         const request = RestFrontSessionRequest.constructFromObject({Login:login, Password: password});
         return this.jwtEndpoint(request).then(response => {
+            console.log(response, request)
             if(response.data && response.data.JWT){
                 JwtApiClient.storeJwtLocally(response.data);
                 this.pydio.loadXmlRegistry();

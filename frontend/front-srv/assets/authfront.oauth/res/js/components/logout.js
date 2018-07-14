@@ -5,7 +5,7 @@ import oidc from '../services/oidc';
 
 class LoginDialog extends React.Component {
     componentDidMount() {
-        this.props.signIn()
+        this.props.signOut()
     }
 
     render() {

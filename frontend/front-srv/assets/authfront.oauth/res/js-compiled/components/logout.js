@@ -42,7 +42,7 @@ var LoginDialog = function (_React$Component) {
     _createClass(LoginDialog, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            this.props.signIn();
+            this.props.signOut();
         }
     }, {
         key: 'render',
@@ -92,4 +92,4 @@ var Dialog = function (_React$Component2) {
 }(_react2.default.Component);
 
 exports.default = Dialog;
-//# sourceMappingURL=dialog.js.map
+//# sourceMappingURL=logout.js.map

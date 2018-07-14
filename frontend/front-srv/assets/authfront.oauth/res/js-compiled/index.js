@@ -18,15 +18,22 @@ var _dialog = require("./components/dialog");
 
 var _dialog2 = _interopRequireDefault(_dialog);
 
+var _logout = require("./components/logout");
+
+var _logout2 = _interopRequireDefault(_logout);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.OAuth = {
     Dialog: _dialog2.default,
+    LogoutDialog: _logout2.default,
     OIDCProvider: _OIDCProvider2.default,
     oidc: _oidc2.default,
     login: function login(props) {
-        console.log("Opening happens multiple times");
         pydio.UI.openComponentInModal('OAuth', 'Dialog', _extends({}, props, { blur: true }));
+    },
+    logout: function logout(props) {
+        pydio.UI.openComponentInModal('OAuth', 'LogoutDialog', _extends({}, props, { blur: true }));
     }
 };
 //# sourceMappingURL=index.js.map

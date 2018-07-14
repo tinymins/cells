@@ -22,100 +22,64 @@ class Auth extends React.Component {
   state = INITIAL_STATE;
 
   componentDidMount() {
-    const { userManager } = this.context.oidc;
+      const { userManager } = this.context.oidc;
 
-    userManager.events.addUserLoaded(function (loadedUser) {
-        console.log("HERE WE GO", loadedUser);
-    });
-
-    //
-    // // onAuthStateChanged returns an unsubscribe method
-    // this.stopAuthListener = auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     // if user exists sign-in!
-    //     this.signIn(user);
-    //   } else {
-    //     // otherwise sign-out!
-    //     this.signOut();
-    //   }
-    // });
-  }
-
-  componentWillUnmount() {
-     // this.stopAuthListener();
+      userManager.events.addUserLoaded((loadedUser) => this.signIn(loadedUser));
   }
 
   handleSignIn = provider => {
-
       const { userManager } = this.context.oidc;
 
 
+      userManager.getUser()
+        .then((user) => {
+            if (!user) {
+                throw "User not found"
+            }
 
-      userManager.signinPopup();
-
-    // const { auth } = this.context.firebase;
-    //
-    // switch (provider) {
-    //   // the auth listener will handle the success cases
-    //   case 'google':
-    //     return auth()
-    //       .signInWithPopup(new auth.GoogleAuthProvider())
-    //       .catch(error => {
-    //         // eslint-disable-next-line no-console
-    //         console.error(error);
-    //         // TODO: notify the user of the error
-    //         return error;
-    //       });
-    //
-    //   case 'anonymous':
-    //     return auth()
-    //       .signInAnonymously()
-    //       .catch(error => {
-    //         // eslint-disable-next-line no-console
-    //         console.error(error);
-    //         // TODO: notify the user of the error
-    //         return error;
-    //       });
-    //
-    //   default:
-    //     const reason = 'Invalid provider passed to signIn method';
-    //     // eslint-disable-next-line no-console
-    //     console.error(reason);
-    //     return Promise.reject(reason);
-    // }
+            this.signIn(user)
+        })
+        .catch(() => {
+            console.log("Signin popup")
+            userManager.signinPopup()
+        });
   };
 
   handleSignOut = () => {
-    const { auth } = this.context.firebase;
+    const { userManager } = this.context.oidc;
 
-    return auth().signOut();
+    userManager.signoutPopup();
+
+    pydio.loadXmlRegistry();
   };
 
   signIn(user) {
-    const { uid, isAnonymous } = user;
+    const { id_token, expires_at } = user;
+
+    PydioApi.JWT_DATA = {
+         jwt: id_token,
+         expirationTime: expires_at
+    };
+
+    pydio.loadXmlRegistry();
 
     this.setState({
-      uid,
-      isAnonymous,
+      idToken: id_token,
     });
   }
 
   signOut() {
-    this.setState(INITIAL_STATE);
+      this.setState(INITIAL_STATE);
   }
 
   render() {
-    // If uid doesn't exist in state, the user is not signed in.
-    // A uid will exist if the user is signed in anonymously.
-    // We'll consider anonymous users as unauthed for this variable.
-    const isAuthed = !!(this.state.uid && !this.state.isAnonymous);
-
-    return this.props.children({
-      ...this.state,
-      signIn: this.handleSignIn,
-      signOut: this.handleSignOut,
-      isAuthed,
-    });
+      const isAuthed = !!this.state.idToken;
+      return this.props.children({
+          ...this.state,
+          signIn: this.handleSignIn.bind(this),
+          signOut: this.handleSignOut.bind(this),
+          isAuthed,
+      });
   }
 }
 

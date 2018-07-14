@@ -541,9 +541,14 @@ func (s *Server) sendCodeResponse(w http.ResponseWriter, r *http.Request, authRe
 		case responseTypeToken:
 			implicitOrHybrid = true
 		case responseTypeIDToken:
+
+			// Pydio
+			claims := authReq.Claims
+			authReq.PClaims.SetToClaims(&claims)
+
 			implicitOrHybrid = true
 			var err error
-			idToken, idTokenExpiry, err = s.newIDToken(authReq.ClientID, authReq.Claims, authReq.Scopes, authReq.Nonce, accessToken, authReq.ConnectorID)
+			idToken, idTokenExpiry, err = s.newIDToken(authReq.ClientID, claims, authReq.Scopes, authReq.Nonce, accessToken, authReq.ConnectorID)
 			if err != nil {
 				s.logger.Errorf("failed to create ID token: %v", err)
 				s.tokenErrHelper(w, errServerError, "", http.StatusInternalServerError)
@@ -601,6 +606,7 @@ func (s *Server) sendCodeResponse(w http.ResponseWriter, r *http.Request, authRe
 }
 
 func (s *Server) handleToken(w http.ResponseWriter, r *http.Request) {
+
 	clientID, clientSecret, ok := r.BasicAuth()
 	if ok {
 		var err error
@@ -637,7 +643,7 @@ func (s *Server) handleToken(w http.ResponseWriter, r *http.Request) {
 
 	grantType := r.PostFormValue("grant_type")
 
-	//s.logger.Info("Grant Type: ", grantType)
+	s.logger.Info("Grant Type: ", grantType)
 
 	switch grantType {
 	case grantTypeAuthorizationCode:

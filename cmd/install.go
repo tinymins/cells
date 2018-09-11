@@ -66,6 +66,8 @@ var (
 	niBindUrl        string
 	niExtUrl         string
 	niDisableSsl     bool
+	niCertFile       string
+	niKeyFile        string
 	niLeEmailContact string
 	niLeAcceptEula   bool
 )
@@ -142,6 +144,10 @@ var installCmd = &cobra.Command{
 					config.Set(niLeEmailContact, "cert", "proxy", "email")
 					config.Set(config.DefaultCaUrl, "cert", "proxy", "caUrl")
 
+				} else if niCertFile != "" && niKeyFile != "" {
+					config.Set(niCertFile, "cert", "proxy", "certFile")
+					config.Set(niKeyFile, "cert", "proxy", "keyFile")
+					saveMsg += "With custom certificate"
 				} else {
 					config.Set(true, "cert", "proxy", "self")
 					saveMsg += "With self signed certificate"
@@ -356,7 +362,9 @@ func init() {
 	flags := installCmd.PersistentFlags()
 	flags.StringVar(&niBindUrl, "bind", "", "[Non interactive mode] internal URL:PORT on which the main proxy will bind. Self-signed SSL will be used by default")
 	flags.StringVar(&niExtUrl, "external", "", "[Non interactive mode] external URL:PORT exposed to outside")
-	flags.BoolVar(&niDisableSsl, "no_ssl", false, "[Non interactive mode] do not enable self signed automatically")
+	flags.BoolVar(&niDisableSsl, "no_ssl", false, "[Non interactive mode] do not enable https")
+	flags.StringVar(&niCertFile, "ssl_cert_file", "", "[Non interactive mode] ssl cert file path, left empty for self signed automatically")
+	flags.StringVar(&niKeyFile, "ssl_key_file", "", "[Non interactive mode] ssl key file path, left empty for self signed automatically")
 	flags.StringVar(&niLeEmailContact, "le_email", "", "[Non interactive mode] contact e-mail for Let's Encrypt provided certificate")
 	flags.BoolVar(&niLeAcceptEula, "le_agree", false, "[Non interactive mode] accept Let's Encrypt EULA")
 
